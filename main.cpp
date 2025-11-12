@@ -12,7 +12,7 @@ void initBoard(int board[M][N], int M, int N) {
     }
   }
 }
-
+ 
 int parseBoard(int board[M][N]) {
   /*
    * This function is where you should define your win conditions.
