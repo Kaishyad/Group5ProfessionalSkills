@@ -13,10 +13,10 @@ void test_parse_valid(void) {
 }
 
 void test_parse_invalid(void) {
-    std::string s = "2x2 P=3\n0 0\n0 0"; // 行列太小
+    std::string s = "2x2 P=3\n0 0\n0 0"; 
     try {
         Board b = parseBoard(s);
-        TEST_CHECK(false); // 不应到达
+        TEST_CHECK(false); 
     } catch (const std::invalid_argument&) {
         TEST_CHECK(true);
     }
