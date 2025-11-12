@@ -2,8 +2,8 @@
 #include <cstdlib>
 #include <iostream>
 
-constexpr int M = 4;  // 6 rows for Connect 4
-constexpr int N = 4;  // 7 columns for Connect 4
+constexpr int M = 6;  // 6 rows for Connect 4
+constexpr int N = 7;  // 7 columns for Connect 4
 
 void initBoard(int board[M][N], int rows, int cols) {
   for (int m = 0; m < rows; m++) {
