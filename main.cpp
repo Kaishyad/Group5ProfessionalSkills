@@ -1,3 +1,4 @@
+#include <cstdio>
 #include <cstdlib>
 #include <iostream>
 
@@ -13,13 +14,14 @@ void initBoard(int board[M][N], int rows, int cols) {
 }
 
 void displayBoard(int board[M][N], int rows, int cols) {
-  std::cout << "\n";
-  for (int n = 0; n < cols; n++) {
-    std::cout << " " << n;
+  std::cout << "\n   ";
+  for (int n = 1; n <= cols; n++) {
+    std::cout << n << " ";
   }
   std::cout << "\n";
 
   for (int m = 0; m < rows; m++) {
+    std::cout << m + 1 << " ";  //row number starting at 1
     for (int n = 0; n < cols; n++) {
       std::cout << "|";
       if (board[m][n] == 0) {
@@ -28,9 +30,10 @@ void displayBoard(int board[M][N], int rows, int cols) {
         std::cout << board[m][n];
       }
     }
-    std::cout << "|\n";
+    std::cout << "|" << std::endl;
   }
 
+  std::cout << "   ";
   for (int n = 0; n < cols; n++) {
     std::cout << "--";
   }
@@ -38,7 +41,7 @@ void displayBoard(int board[M][N], int rows, int cols) {
 }
 
 int parseBoard(int board[M][N], int rows, int cols) {
-  // Check horizontal wins
+  //Check horizontal wins
   for (int m = 0; m < rows; m++) {
     for (int n = 0; n <= cols - 4; n++) {
       if (board[m][n] != 0 &&
@@ -50,7 +53,7 @@ int parseBoard(int board[M][N], int rows, int cols) {
     }
   }
 
-  // Check vertical wins
+  //Check vertical wins
   for (int m = 0; m <= rows - 4; m++) {
     for (int n = 0; n < cols; n++) {
       if (board[m][n] != 0 &&
@@ -62,7 +65,7 @@ int parseBoard(int board[M][N], int rows, int cols) {
     }
   }
 
-  // Check diagonal wins (down-right)
+  //Check diagonal wins (down-right)
   for (int m = 0; m <= rows - 4; m++) {
     for (int n = 0; n <= cols - 4; n++) {
       if (board[m][n] != 0 &&
@@ -74,7 +77,7 @@ int parseBoard(int board[M][N], int rows, int cols) {
     }
   }
 
-  // Check diagonal wins (down-left)
+  //Check diagonal wins (down-left)
   for (int m = 0; m <= rows - 4; m++) {
     for (int n = 3; n < cols; n++) {
       if (board[m][n] != 0 &&
@@ -97,15 +100,19 @@ void gameLoop(int board[M][N], bool &cont, int players, int rows, int cols) {
     displayBoard(board, rows, cols);
 
     for (int p = 1; p <= players; ++p) {
-      std::cout << "Player " << p << ", choose column (0-" << cols-1 << "): ";
+      std::cout << "Player " << p << ", choose column (1-" << cols << "): ";
       std::cin >> col;
+      //Adjust indexing
+      col -= 1;
 
+      //Check column bounds
       if (col < 0 || col >= cols) {
         std::cout << "Invalid column!" << std::endl;
         --p;
         continue;
       }
 
+      //Find the lowest empty row in this column (gravity)
       int row = -1;
       for (int m = rows - 1; m >= 0; m--) {
         if (board[m][col] == 0) {
@@ -121,16 +128,20 @@ void gameLoop(int board[M][N], bool &cont, int players, int rows, int cols) {
       }
 
       board[row][col] = p;
-      std::cout << "Player " << p << " placed at row " << row << ", column " << col << std::endl;
+      displayBoard(board, rows, cols);
+      std::cout << "Player " << p << " placed at row " << row + 1
+                << ", column " << col + 1 << std::endl;
 
       winner = parseBoard(board, rows, cols);
       if (winner != 0) {
         displayBoard(board, rows, cols);
-        std::cout << "\nPlayer " << winner << " has won! \n" << std::endl;
+        std::cout << "\n＼(^-^)／ Player " << winner << " has won! ＼(^-^)／\n" << std::endl;
+
         cont = false;
         break;
       }
 
+      //board full draw
       bool full = true;
       for (int n = 0; n < cols; n++) {
         if (board[0][n] == 0) {
@@ -140,7 +151,7 @@ void gameLoop(int board[M][N], bool &cont, int players, int rows, int cols) {
       }
       if (full) {
         displayBoard(board, rows, cols);
-        std::cout << "\n It's a draw! \n" << std::endl;
+        std::cout << "\n⊙﹏⊙ It's a draw! ⊙﹏⊙\n" << std::endl;
         cont = false;
         break;
       }
@@ -149,10 +160,10 @@ void gameLoop(int board[M][N], bool &cont, int players, int rows, int cols) {
 }
 
 int main() {
-  int P = 2;  // Connect 4 is always 2 players
+  int P = 2;  //Connect 4 is always 2 players
   bool cont = true;
 
-  std::cout << " Connect 4 " << std::endl;
+  std::cout << "=== Connect 4 ===" << std::endl;
   std::cout << "Playing on a " << M << "x" << N << " board" << std::endl;
   std::cout << "Players: " << P << std::endl;
 
