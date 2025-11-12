@@ -1,20 +1,16 @@
 # Connect 4
 <div align="center">
 
-![Connect 4 Banner](https://img.shields.io/badge/Game-Connect%204-red?style=for-the-badge)
-![C++](https://img.shields.io/badge/C++-00599C?style=for-the-badge&logo=cplusplus&logoColor=white)
-![Status](https://img.shields.io/badge/Status-Complete-success?style=for-the-badge)
-
 *A classic two-player strategy game implemented in C++*
 
 </div>
 
 ## Collaborators
 
-- [**Kaishya Desai**]
-- [**Reeshel Dsouza**]
-- [**Marisa Allen**]
-- [**Feiyang Mu**]
+- **Kaishya Desai**
+- **Reeshel Dsouza**
+- **Marisa Allen**
+- **Feiyang Mu**
 
 ## Game Description
 Connect 4 is a two-player connection strategy game where players take turns dropping colored discs into a vertical grid. The game features:
@@ -31,7 +27,7 @@ The game runs in the terminal/console with a simple text-based interface that di
 
 A player wins the game by connecting **four of their pieces** in a row. Winning combinations include:
 
-###️ Horizontal
+### Horizontal
 Four consecutive pieces in the same row
 ### Vertical
 Four consecutive pieces in the same column
@@ -39,3 +35,5 @@ Four consecutive pieces in the same column
 Four consecutive pieces diagonally from top-left to bottom-right
 ### Diagonal (Down-Left)
 Four consecutive pieces diagonally from top-right to bottom-left
+
+## Building and Running Game
