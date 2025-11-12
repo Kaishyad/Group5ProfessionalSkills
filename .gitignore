@@ -39,3 +39,7 @@
 
 # debug information files
 *.dwo
+
+# Cmake configs
+CMakeLists.txt
+
