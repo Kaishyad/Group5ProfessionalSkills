@@ -1,3 +1,5 @@
+.PHONY: clean
+
 game: main.o
 	g++ -o game main.o
 
