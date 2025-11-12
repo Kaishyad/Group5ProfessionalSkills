@@ -2,8 +2,8 @@
 #include <cstdlib>
 #include <iostream>
 
-constexpr int M = 6;  // 6 rows for Connect 4
-constexpr int N = 7;  // 7 columns for Connect 4
+constexpr int M = 4;  // 6 rows for Connect 4
+constexpr int N = 4;  // 7 columns for Connect 4
 
 void initBoard(int board[M][N], int rows, int cols) {
   for (int m = 0; m < rows; m++) {
@@ -13,7 +13,7 @@ void initBoard(int board[M][N], int rows, int cols) {
   }
 }
 
-void displayBoard(int board[M][N], int rows, int cols) {
+void displayBoard(int board[M][N], int rows, int cols, bool winPositions[M][N] = nullptr) {
   std::cout << "\n   ";
   for (int n = 1; n <= cols; n++) {
     std::cout << n << " ";
@@ -21,10 +21,12 @@ void displayBoard(int board[M][N], int rows, int cols) {
   std::cout << "\n";
 
   for (int m = 0; m < rows; m++) {
-    std::cout << m + 1 << " ";  //row number starting at 1
+    std::cout << m + 1 << " ";
     for (int n = 0; n < cols; n++) {
       std::cout << "|";
-      if (board[m][n] == 0) {
+      if (winPositions && winPositions[m][n]) {
+        std::cout << "X";
+      } else if (board[m][n] == 0) {
         std::cout << " ";
       } else {
         std::cout << board[m][n];
@@ -40,26 +42,24 @@ void displayBoard(int board[M][N], int rows, int cols) {
   std::cout << "-\n";
 }
 
-int parseBoard(int board[M][N], int rows, int cols) {
-  // Check all directions using offset arrays
-  int directions[4][2] = {{0, 1}, {1, 0}, {1, 1}, {1, -1}};  // horizontal, vertical, diagonal-right, diagonal-left
-
+int parseBoard(int board[M][N], int rows, int cols, bool winPositions[M][N] = nullptr) {
   for (int m = 0; m < rows; m++) {
     for (int n = 0; n < cols; n++) {
       if (board[m][n] == 0) continue;
 
       const int player = board[m][n];
 
-      // Check each direction
-      for (auto & direction : directions) {
-        int dm = direction[0];
-        int dn = direction[1];
+      //Check each direction
+      for (int d = 0; d < 4; d++) {
+        constexpr int directions[4][2] = {{0, 1}, {1, 0}, {1, 1}, {1, -1}};
+        const int dm = directions[d][0];
+        const int dn = directions[d][1];
         bool win = true;
 
-        // Check if 4 in a row in this direction
+        //Check if 4 in a row in this direction
         for (int i = 1; i < 4; i++) {
-          int newM = m + dm * i;
-          int newN = n + dn * i;
+          const int newM = m + dm * i;
+          const int newN = n + dn * i;
 
           if (newM < 0 || newM >= rows || newN < 0 || newN >= cols || board[newM][newN] != player) {
             win = false;
@@ -67,7 +67,15 @@ int parseBoard(int board[M][N], int rows, int cols) {
           }
         }
 
-        if (win) return player;
+        if (win) {
+          //Note winning positions if array provided
+          if (winPositions) {
+            for (int i = 0; i < 4; i++) {
+              winPositions[m + dm * i][n + dn * i] = true;
+            }
+          }
+          return player;
+        }
       }
     }
   }
@@ -86,12 +94,12 @@ void gameLoop(int board[M][N], bool &cont, int players, int rows, int cols) {
       col -= 1;
 
       if (col < 0 || col >= cols) {
-        std::cout << "Invalid column, Pick another!" << std::endl;
+        std::cout << "Invalid column!" << std::endl;
         --p;
         continue;
       }
 
-      // Find lowest empty row
+      //Find the lowest empty row
       int row = -1;
       for (int m = rows - 1; m >= 0; m--) {
         if (board[m][col] == 0) {
@@ -111,8 +119,11 @@ void gameLoop(int board[M][N], bool &cont, int players, int rows, int cols) {
       std::cout << "Player " << p << " placed at row " << row + 1
                 << ", column " << col + 1 << std::endl;
 
-      int winner = parseBoard(board, rows, cols);
+      //Check for winner and winning positions
+      bool winPositions[M][N] = {false};
+      int winner = parseBoard(board, rows, cols, winPositions);
       if (winner != 0) {
+        displayBoard(board, rows, cols, winPositions);
         std::cout << "\n＼(^-^)／ Player " << winner << " has won! ＼(^-^)／\n" << std::endl;
         cont = false;
         break;
