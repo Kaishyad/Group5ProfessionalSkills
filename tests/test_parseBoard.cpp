@@ -43,16 +43,25 @@ void test_diagonal_win(void) {
     TEST_CHECK(winner == 1);
 }
 
+void test_draw(void) {
+    int board[6][7];
+    bool winPositions[6][7] = {false};
+
+    for (int m = 0; m < 6; m++) {
+        for (int n = 0; n < 7; n++) {
+            board[m][n] = (m + n) % 2 + 1; 
+        }
+    }
+
+    int winner = parseBoard(board, 6, 7, winPositions);
+    TEST_CHECK(winner == 0); 
+}
+
 TEST_LIST = {
     { "no win", test_no_win },
     { "horizontal win", test_horizontal_win },
     { "vertical win", test_vertical_win },
     { "diagonal win", test_diagonal_win },
-    { NULL, NULL }
-};
-
-TEST_LIST = {
-    { "parse: valid input", test_parse_valid },
-    { "parse: invalid dimension", test_parse_invalid },
+    { "draw (full board, no winner)", test_draw },
     { NULL, NULL }
 };
