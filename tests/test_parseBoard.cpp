@@ -1,26 +1,55 @@
 #include "acutest.h"
-#include "game.h"
-#include <string>
+#include <iostream>
 
-void test_parse_valid(void) {
-    std::string s = "3x3 P=3\n1 0 2\n0 1 0\n2 0 1";
-    Board b = parseBoard(s);
-    TEST_CHECK(b.rows == 3);
-    TEST_CHECK(b.cols == 3);
-    TEST_CHECK(b.players == 3);
-    TEST_CHECK(b.cells[0][0] == 1);
-    TEST_CHECK(b.cells[2][2] == 1);
+extern int parseBoard(int board[6][7], int rows, int cols, bool winPositions[6][7]);
+
+void test_no_win(void) {
+    int board[6][7] = {0};
+    bool winPositions[6][7] = {false};
+    int winner = parseBoard(board, 6, 7, winPositions);
+    TEST_CHECK(winner == 0); 
 }
 
-void test_parse_invalid(void) {
-    std::string s = "2x2 P=3\n0 0\n0 0"; 
-    try {
-        Board b = parseBoard(s);
-        TEST_CHECK(false); 
-    } catch (const std::invalid_argument&) {
-        TEST_CHECK(true);
-    }
+void test_horizontal_win(void) {
+    int board[6][7] = {0};
+    bool winPositions[6][7] = {false};
+    board[0][0] = 1;
+    board[0][1] = 1;
+    board[0][2] = 1;
+    board[0][3] = 1;
+    int winner = parseBoard(board, 6, 7, winPositions);
+    TEST_CHECK(winner == 1);
 }
+
+void test_vertical_win(void) {
+    int board[6][7] = {0};
+    bool winPositions[6][7] = {false};
+    board[0][0] = 2;
+    board[1][0] = 2;
+    board[2][0] = 2;
+    board[3][0] = 2;
+    int winner = parseBoard(board, 6, 7, winPositions);
+    TEST_CHECK(winner == 2);
+}
+
+void test_diagonal_win(void) {
+    int board[6][7] = {0};
+    bool winPositions[6][7] = {false};
+    board[0][0] = 1;
+    board[1][1] = 1;
+    board[2][2] = 1;
+    board[3][3] = 1;
+    int winner = parseBoard(board, 6, 7, winPositions);
+    TEST_CHECK(winner == 1);
+}
+
+TEST_LIST = {
+    { "no win", test_no_win },
+    { "horizontal win", test_horizontal_win },
+    { "vertical win", test_vertical_win },
+    { "diagonal win", test_diagonal_win },
+    { NULL, NULL }
+};
 
 TEST_LIST = {
     { "parse: valid input", test_parse_valid },
