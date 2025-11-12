@@ -2,8 +2,8 @@
 #include <cstdlib>
 #include <iostream>
 
-const int M = 6;  // 6 rows for Connect 4
-const int N = 7;  // 7 columns for Connect 4
+constexpr int M = 6;  // 6 rows for Connect 4
+constexpr int N = 7;  // 7 columns for Connect 4
 
 void initBoard(int board[M][N], int rows, int cols) {
   for (int m = 0; m < rows; m++) {
@@ -41,50 +41,33 @@ void displayBoard(int board[M][N], int rows, int cols) {
 }
 
 int parseBoard(int board[M][N], int rows, int cols) {
-  //Check horizontal wins
+  // Check all directions using offset arrays
+  int directions[4][2] = {{0, 1}, {1, 0}, {1, 1}, {1, -1}};  // horizontal, vertical, diagonal-right, diagonal-left
+
   for (int m = 0; m < rows; m++) {
-    for (int n = 0; n <= cols - 4; n++) {
-      if (board[m][n] != 0 &&
-          board[m][n] == board[m][n+1] &&
-          board[m][n] == board[m][n+2] &&
-          board[m][n] == board[m][n+3]) {
-        return board[m][n];
-      }
-    }
-  }
-
-  //Check vertical wins
-  for (int m = 0; m <= rows - 4; m++) {
     for (int n = 0; n < cols; n++) {
-      if (board[m][n] != 0 &&
-          board[m][n] == board[m+1][n] &&
-          board[m][n] == board[m+2][n] &&
-          board[m][n] == board[m+3][n]) {
-        return board[m][n];
-      }
-    }
-  }
+      if (board[m][n] == 0) continue;
 
-  //Check diagonal wins (down-right)
-  for (int m = 0; m <= rows - 4; m++) {
-    for (int n = 0; n <= cols - 4; n++) {
-      if (board[m][n] != 0 &&
-          board[m][n] == board[m+1][n+1] &&
-          board[m][n] == board[m+2][n+2] &&
-          board[m][n] == board[m+3][n+3]) {
-        return board[m][n];
-      }
-    }
-  }
+      const int player = board[m][n];
 
-  //Check diagonal wins (down-left)
-  for (int m = 0; m <= rows - 4; m++) {
-    for (int n = 3; n < cols; n++) {
-      if (board[m][n] != 0 &&
-          board[m][n] == board[m+1][n-1] &&
-          board[m][n] == board[m+2][n-2] &&
-          board[m][n] == board[m+3][n-3]) {
-        return board[m][n];
+      // Check each direction
+      for (auto & direction : directions) {
+        int dm = direction[0];
+        int dn = direction[1];
+        bool win = true;
+
+        // Check if 4 in a row in this direction
+        for (int i = 1; i < 4; i++) {
+          int newM = m + dm * i;
+          int newN = n + dn * i;
+
+          if (newM < 0 || newM >= rows || newN < 0 || newN >= cols || board[newM][newN] != player) {
+            win = false;
+            break;
+          }
+        }
+
+        if (win) return player;
       }
     }
   }
@@ -93,26 +76,22 @@ int parseBoard(int board[M][N], int rows, int cols) {
 }
 
 void gameLoop(int board[M][N], bool &cont, int players, int rows, int cols) {
-  int winner;
-  int col;
+  displayBoard(board, rows, cols);
 
   do {
-    displayBoard(board, rows, cols);
-
     for (int p = 1; p <= players; ++p) {
       std::cout << "Player " << p << ", choose column (1-" << cols << "): ";
+      int col;
       std::cin >> col;
-      //Adjust indexing
       col -= 1;
 
-      //Check column bounds
       if (col < 0 || col >= cols) {
-        std::cout << "Invalid column!" << std::endl;
+        std::cout << "Invalid column, Pick another!" << std::endl;
         --p;
         continue;
       }
 
-      //Find the lowest empty row in this column (gravity)
+      // Find lowest empty row
       int row = -1;
       for (int m = rows - 1; m >= 0; m--) {
         if (board[m][col] == 0) {
@@ -132,16 +111,14 @@ void gameLoop(int board[M][N], bool &cont, int players, int rows, int cols) {
       std::cout << "Player " << p << " placed at row " << row + 1
                 << ", column " << col + 1 << std::endl;
 
-      winner = parseBoard(board, rows, cols);
+      int winner = parseBoard(board, rows, cols);
       if (winner != 0) {
-        displayBoard(board, rows, cols);
         std::cout << "\n＼(^-^)／ Player " << winner << " has won! ＼(^-^)／\n" << std::endl;
-
         cont = false;
         break;
       }
 
-      //board full draw
+      // Check for draw
       bool full = true;
       for (int n = 0; n < cols; n++) {
         if (board[0][n] == 0) {
@@ -150,7 +127,6 @@ void gameLoop(int board[M][N], bool &cont, int players, int rows, int cols) {
         }
       }
       if (full) {
-        displayBoard(board, rows, cols);
         std::cout << "\n⊙﹏⊙ It's a draw! ⊙﹏⊙\n" << std::endl;
         cont = false;
         break;
@@ -160,7 +136,7 @@ void gameLoop(int board[M][N], bool &cont, int players, int rows, int cols) {
 }
 
 int main() {
-  int P = 2;  //Connect 4 is always 2 players
+  int P = 2;
   bool cont = true;
 
   std::cout << "=== Connect 4 ===" << std::endl;
