@@ -1,7 +1,45 @@
 #include "acutest.h"
 #include <iostream>
 
-extern void initBoard(int board[6][7], int rows, int cols);
+constexpr int M = 6;  // 6 rows for Connect 4
+constexpr int N = 7;  // 7 columns for Connect 4
+
+void initBoard(int board[M][N], int rows, int cols) {
+  for (int m = 0; m < rows; m++) {
+    for (int n = 0; n < cols; n++) {
+      board[m][n] = 0;
+    }
+  }
+}
+
+void displayBoard(int board[M][N], int rows, int cols, bool winPositions[M][N] = nullptr) {
+  std::cout << "\n   ";
+  for (int n = 1; n <= cols; n++) {
+    std::cout << n << " ";
+  }
+  std::cout << "\n";
+
+  for (int m = 0; m < rows; m++) {
+    std::cout << m + 1 << " ";
+    for (int n = 0; n < cols; n++) {
+      std::cout << "|";
+      if (winPositions && winPositions[m][n]) {
+        std::cout << "X";
+      } else if (board[m][n] == 0) {
+        std::cout << " ";
+      } else {
+        std::cout << board[m][n];
+      }
+    }
+    std::cout << "|" << std::endl;
+  }
+
+  std::cout << "   ";
+  for (int n = 0; n < cols; n++) {
+    std::cout << "--";
+  }
+  std::cout << "-\n";
+}
 int parseBoard(int board[6][7], int rows, int cols, bool winPositions[6][7] = nullptr) {
     for (int m = 0; m < rows; m++) {
         for (int n = 0; n < cols; n++) {
@@ -32,35 +70,6 @@ int parseBoard(int board[6][7], int rows, int cols, bool winPositions[6][7] = nu
         }
     }
     return 0;
-}
-
-void displayBoard(int board[M][N], int rows, int cols, bool winPositions[M][N] = nullptr) {
-  std::cout << "\n   ";
-  for (int n = 1; n <= cols; n++) {
-    std::cout << n << " ";
-  }
-  std::cout << "\n";
-
-  for (int m = 0; m < rows; m++) {
-    std::cout << m + 1 << " ";
-    for (int n = 0; n < cols; n++) {
-      std::cout << "|";
-      if (winPositions && winPositions[m][n]) {
-        std::cout << "X";
-      } else if (board[m][n] == 0) {
-        std::cout << " ";
-      } else {
-        std::cout << board[m][n];
-      }
-    }
-    std::cout << "|" << std::endl;
-  }
-
-  std::cout << "   ";
-  for (int n = 0; n < cols; n++) {
-    std::cout << "--";
-  }
-  std::cout << "-\n";
 }
 
 void test_initBoard(void) {
