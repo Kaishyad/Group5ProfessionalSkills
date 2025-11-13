@@ -1,13 +1,19 @@
 # Group5ProfessionalSkills
 MISCADA Collaborative Software Development
 
+## Building and Running Game
+This game uses a Makefile to compile and run, with GNU make. This project
+also uses g++ to compile the code.<br>
+To build and run the game with the Makefile:
+```bash
+make game
+./game
 
-
-
-
-
-
-
+```
+To clean files:
+```bash
+make clean
+```
 
 ## Tests
 
