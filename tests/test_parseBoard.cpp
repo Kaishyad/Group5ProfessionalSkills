@@ -82,10 +82,14 @@ void test_diagonal_win(void) {
 void test_draw(void) {
     int board[M][N];
     bool winPositions[M][N] = {false};
+    const int pattern[2][N] = {
+        {1, 1, 2, 2, 1, 1, 2},
+        {2, 2, 1, 1, 2, 2, 1}
+    };
 
     for (int m = 0; m < M; m++) {
         for (int n = 0; n < N; n++) {
-            board[m][n] = (m + n) % 2 + 1; 
+            board[m][n] = pattern[m % 2][n]; 
         }
     }
 
