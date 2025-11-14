@@ -1,0 +1,26 @@
+name: C++ Build and Test
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: sudo apt-get update && sudo apt-get install -y g++ make
+
+      - name: Build everything (make all)
+        run: make all
+
+      - name: Run parseBoard tests
+        run: ./test_parseBoard
+
+      - name: Run init/display tests
+        run: ./test_init_display

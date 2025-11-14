@@ -1,5 +1,7 @@
 .PHONY: clean
 
+all: game test_parseBoard test_init_display
+
 game: main.o
 	g++ -o game main.o
 

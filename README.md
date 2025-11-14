@@ -40,9 +40,9 @@ A player wins the game by connecting four of their pieces in a row. Winning comb
 ## Building and Running Game
 This game uses a Makefile to compile and run, with GNU make. This project
 also uses g++ to compile the code.<br>
-To build and run the game with the Makefile:
+To build and run the game with the Makefile: (The command builds both the game and the tests)
 ```bash
-make game
+make all
 ./game
 
 ```
@@ -71,9 +71,8 @@ This project includes unit tests written with Acutest to verify core game logic.
 ### Running Tests
 After building with the provided Makefile:
 ```bash
-make test_parseBoard
+
 ./test_parseBoard
 
-make test_init_display
 ./test_init_display
 ```
